@@ -1,0 +1,245 @@
+/** Base color list: 
+ * background-color:#0C1C2D,body;
+ * color:#9ca5b0, th
+ * color: #307CAA, td, add_to_chart
+ * background: linear-gradient(#192C42,#223b59), on container
+ * background:#223b59, scroll_button:hover, coin_add, add_to_chart
+ * background:#16c784 !important, add_to_chart:hover, coin_add:hover
+ */
+
+:root{
+    --body-clr:#0C1C2D;
+    --th-clr:white;/*#9ca5b0;*/
+    --subtle-txt-clr:#307CAA;
+    --gradient-clr:linear-gradient(#192C42,#223b59);
+    --bg-clr:#223b59;
+    --hover-clr:#16c784 !important;
+}
+
+
+html {
+    height:100%;
+}
+
+body {
+    cursor:default;
+    background-color:var(--body-clr);
+    text-align:center;
+    height:100%;
+    margin:0px;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+#background {
+    margin:auto;
+    height:100%;
+    width:1200px;
+}
+
+.topnav {
+    width:100%;
+}
+
+th {
+    color:var(--th-clr);
+    font-size:16px;
+}
+
+td {
+    color:var(--subtle-txt-clr);
+    font-size:14px;
+}
+
+#display_case {
+    margin:auto;
+    padding-top:15px;
+    height:100%;
+    width:1000px;
+}
+
+.container {
+    font-family: Futura,Trebuchet MS,Arial,sans-serif;
+    color:white;
+    background:var(--gradient-clr);
+    height:inherit;
+    border:0px;
+    border-radius:5px;
+    position:relative;
+    opacity:0;
+}
+.parent {
+    display:inline-block;
+}
+
+#scrolling_coin_opts {
+    width:624px;
+    height:60px;
+    overflow:hidden;
+    vertical-align: top;
+}
+
+.coin_opts {
+    width: 100px;
+    height:60px;
+    margin-left:2px;
+    margin-right:2px;
+    border-color:white;
+    float:right;
+}
+
+.scroll_button {
+    width:29px;
+    height:60px;
+    border-radius:15px;
+    transition: background-color .3s;
+}
+
+.scroll_button:hover {
+    background:var(--bg-clr);
+    cursor:pointer;
+}
+
+.portfolio_time:hover {
+    cursor:pointer;
+}
+
+.add_to_chart:hover {
+    background:var(--hover-clr);
+    cursor:pointer;
+}
+
+.transparent_button {
+    border-radius:15px;
+    border: 0px;
+    background:inherit;
+}
+
+.arrow_img {
+    width:30px;
+    height:30px;
+    margin-top:25px;
+    margin-bottom:25px;
+    filter: invert(43%) sepia(64%) saturate(533%) hue-rotate(158deg) brightness(86%) contrast(86%);
+}
+
+.coin_opts div {
+    transition: border .15s, background .3s;
+}
+
+.coin_add:hover {
+    background:var(--hover-clr);
+    cursor:pointer;
+}
+
+.portfolio_time {
+    padding-top:12px;
+    font-weight:bold
+}
+
+#main_chart {
+    width:690px
+}
+
+#line_chart {
+    margin-top:-20px;
+    width:690px;
+    height:300px;
+}
+
+#addable_coins {
+    width:690px;
+    height:400px;
+}
+
+#coin_charts {
+    width:94%;
+    margin:0px 3% 0 3%;
+    padding-top:7px;
+    text-align:left;
+    border-spacing:0px;
+}
+
+.coin_add {
+    background:var(--bg-clr);
+    color:white;
+    width:90px;
+    height:25px;
+    text-align:center;
+    transition: background .3s;
+}
+
+#comparisons {
+    width:343px;
+    height:400px;
+}
+
+#comparisons_table {
+    width:96%;
+    margin:0 2% 0 2%;
+    padding-top: 4px;
+    border-spacing: 3px;
+}
+
+#portfolio_info {
+    width:290px;
+    height:385px;
+}
+
+.time_button {
+    font-size:18px;
+    transition:background .3s;
+    background:var(--bg-clr);
+    color:white;
+    padding:3px 0 3px 0;
+    width:69px;
+    position:relative;
+}
+
+.time_button:hover {
+    background:var(--hover-clr);
+    cursor:pointer;
+}
+
+#portfolio_table {
+    width:96%;
+    margin:0 2% 0 2%;
+    padding-top:4px;
+    border-spacing: 0 3px;
+}
+
+#pie_chart {
+    width:290px;
+    height:400px;
+}
+
+.add_to_chart {
+    background:var(--bg-clr);
+    color:var(--subtle-txt-clr);
+    font-weight:bold;
+    font-size: 25px;
+}
+
+tspan {
+    fill:#9ca5b0;
+}
+
+.slidecontainer {
+    padding:0px 5px;
+}
+
+.slider {
+    width: 100%; /* Full-width */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+.ratio {
+    text-align:right;
+    width:45px;
+}

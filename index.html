@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ornus Analytics</title>
+    <link rel="icon" href="data_files/ornus-logo.png">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/charts.css">
+
+    <script src="scripts/fetch.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/data.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
+
+    <script src="data_files/line_chart.js"></script>
+    <script src="data_files/pie_chart.js"></script>
+    <script src="scripts/main.js"></script>
+  </head>
+
+  <body>
+    <div id="background">
+      <div id="display_case">
+	<div class="parent" id="main_chart">
+          <div class="parent" style="height:60px">
+	    <div id="left_scroll" class="parent scroll_button">
+	      <div id="container11" class="container transparent_button">
+	        <img class="arrow_img" style="transform:scaleX(-1)" src="data_files/arrow-tooltip.png">
+	      </div>
+	    </div>
+	    <div id="scrolling_coin_opts" class="parent">
+	      <div id="opt1" class="parent coin_opts">
+	        <div id="container1" class="container" style="bottom: 0px; opacity: 1; border: 3px solid white;">
+		  <div class="portfolio_time" style="padding-top:12px">FOLIO</div>
+		  <div class="add_to_chart">
+		    +
+		  </div>
+	        </div>
+	      </div>
+	      <div id="opt2" class="parent coin_opts">
+	        <div id="container2" class="container">
+		  <div class="portfolio_time">BTC</div>
+		  <div class="add_to_chart">
+		    +
+		  </div>
+	        </div>
+	      </div>
+	      <div id="opt3" class="parent coin_opts">
+	        <div id="container3" class="container">
+		  <div class="portfolio_time">ETH</div>
+		  <div class="add_to_chart">
+		    +
+		  </div>
+	        </div>
+	      </div>
+	      <div id="opt4" class="parent coin_opts">
+	        <div id="container4" class="container">
+		  <div class="portfolio_time">XRP</div>
+		  <div class="add_to_chart">
+		    +
+		  </div>
+	        </div>
+	      </div>	
+	      <div id="opt5" class="parent coin_opts">
+	        <div id="container5" class="container">
+		  <div class="portfolio_time">LTC</div>
+		  <div class="add_to_chart">
+		    +
+		  </div>
+	        </div>
+	      </div>
+	      <div id="opt6" class="parent coin_opts">
+	        <div id="container6" class="container">
+		  <div class="portfolio_time">ADA</div>
+		  <div class="add_to_chart">
+		    +
+		  </div>
+	        </div>
+	      </div>
+	      <!-- Additional coin opts insertable here via JS -->
+	      <div id="opt7" class="parent coin_opts">
+	        <div class="container" style="opacity:1">
+		  <div class="add_to_chart">
+		    +
+		  </div>
+	        </div>
+	      </div>
+	      <div id="opt8" class="parent coin_opts">
+	        <div class="container" style="opacity:1">
+		  <div class="add_to_chart">
+		    +
+		  </div>
+	        </div>
+	      </div>
+	    </div>
+	    <div id="right_scroll" class="parent scroll_button">
+	      <div id="container12" class="container transparent_button">
+	        <img class="arrow_img" src="data_files/arrow-tooltip.png">
+	      </div>
+	    </div>
+          </div>
+	  <div id="line_chart" class="parent"> 
+	    <div id="container7" class="container">
+	      <div id="line_figure"></div>
+	    </div>
+	  </div>
+	</div> 
+	<div id="portfolio_info" class="parent">
+	  <div id="container9" class="container">
+	    <table id="portfolio_table">
+	      <tr>
+		<th colspan="4">Portfolio Performance</th>
+	      </tr>
+	      <tr>
+		<!-- TODO: I want these to look like more traditional buttons. -->
+		<td data-time="365" class="time_button">1yr</td>
+		<td data-time="183" class="time_button">6mo</td>
+		<td data-time="31" class="time_button">1mo</td>
+		<td data-time="7" class="time_button">7d</td>
+	      </tr>
+	      <tr>
+		<th id="return" colspan="4" style="font-size:90px;color:#16c784">+281%</th>
+	      </tr>
+	      <tr>
+		<th>High:</th>
+		<td>370.2%</td>
+		<th>Avg:</th>
+		<td>119.9%</td>
+	      </tr>
+	      <tr>
+		<th>Low:</th>
+		<td>-12.5%</td>
+		<th></th>
+		<td></td>
+	      </tr>
+	      <tr>
+		<td></td>
+		<th style="text-align:left">Funds:</th>
+		<td style="text-align:left">$1,804.00</td>
+		<td></td>
+	      </tr>
+	      <tr>
+		<th></th>
+		<th style="text-align:left">Returns:</th>
+		<td style="text-align:left">$5,069.24</td>
+		<td></td>
+	      </tr>
+	    </table>
+	  </div>
+	</div>
+	<div id="addable_coins" class="parent">
+	  <div id="container8" class="container">
+	    <table id="coin_charts">
+	      <tr>
+		<th>Coin</th>
+		<th>Price</th>
+                <th></th>
+                <th colspan="3" style="text-align:center">Proportion</th>
+                <th><th>
+	      </tr>
+	      <tr id="bitcoin_chart">
+		<td>Bitcoin</td>
+		<td>$33,092.03</td>
+                <td id="btcRatio" class="ratio">25%</td>
+                <td colspan="3">
+                  <div class="slidecontainer">
+                    <input type="range" min="0" max="100" value="50" class="slider" data-ratio="btcRatio">
+                  </div>
+                </td>
+		<td class="coin_add add_to_chart selected" data-chart="BTC" data-color="#7cb5ec" style="background:rgb(124, 181, 236)">−</td>
+	      </tr>
+	      <tr id="etherium_chart">
+		<td>Etherium</td>
+		<td>$670.98</td>
+                <td class="ratio" id="ethRatio">25%</td>
+                <td colspan="3">
+                  <div class="slidecontainer">
+                    <input type="range" min="0" max="100" value="50" class="slider" data-ratio="ethRatio">
+                  </div>
+                </td>
+		<td class="coin_add add_to_chart" data-chart="ETH">+</td>
+	      </tr>
+	      <tr id="xrp_chart">
+		<td>XRP</td>
+		<td>$0.23</td>
+                <td id="xrpRatio" class="ratio">25%</td>
+                <td colspan="3">
+                  <div class="slidecontainer">
+                    <input type="range" min="0" max="100" value="50" class="slider" data-ratio="xrpRatio">
+                  </div>
+                </td>
+		<td class="coin_add add_to_chart" data-chart="">+</td>
+	      </tr>
+	      <tr id="litecoin_chart">
+		<td>Litecoin</td>
+		<td>$155.12</td>
+                <td id="ltcRatio" class="ratio">25</td>
+                <td colspan="3">
+                  <div class="slidecontainer">
+                    <input type="range" min="0" max="100" value="50" class="slider" data-ratio="ltcRatio">
+                  </div>
+                </td>
+		<td class="coin_add add_to_chart" data-chart="LTC">+</td>
+	      </tr>
+	    </table>
+	  </div>
+	</div>
+        <div id="pie_chart" class="parent">
+	  <div id="container10" class="container">
+	    <img style="position:absolute;width:100px;height:100px;z-index:1;top:150px;left:95px;" src="data_files/ornus-logo.png">
+	    <div id="pie_figure"></div>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>
