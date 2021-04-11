@@ -1,9 +1,8 @@
-//TODO: 2, Add information in portfolio performance
-//TODO: 5, Use binance data for charts
-//TODO: 4, Design AWS dynamic page structure
-//TODO: 1, Delete chart pop in and out on redraw
-//TODO: 1, Find color for folio time selection
-//TODO: 1, Make folio time in out chart
+//TODO: make buttons at top re-evalute folio
+//TODO: make analyzePortfolio account for window size
+//TODO: add button above proportion to generate a portfolio
+//TODO: make funds an adustable value (textarea)
+//TODO: make calcPortfolio reload the pie chart
 
 const NUM_CONTAINERS = 13;
 var num = 0;
@@ -23,13 +22,39 @@ var time_frame;
 Array.prototype.min = function() {
     return Math.min.apply(null, this);
 };
+
+Array.prototype.max = function() {
+    return Math.max.apply(null, this);
+};
+
+$(document).ready(function() {
+    //Get starter data and run startup animations
+    initialize();
+    
+    //Allow selections of coin opts
+    coin_selections();
+
+    //Add border to container on portfolio click
+    portfolio_selections();
+
+    //Highlight time selection
+    time_selections();
+			    
+    //Scroll through portfolios
+    scroll_portfolios();
+
+    //Listen to sliders
+    slider_updates();
+});
+
 function initialize(){
     //Get DATA for BTC
     getCoin("BTC")
         .then(vals => {
             chart.series[0].setData(vals);
+            analyzePortfolio(vals); 
         })
-
+    
     //Load line chart
     chart = Highcharts.chart('line_figure',chart_data);
 
@@ -54,7 +79,7 @@ function coin_selections(){
 	var color;
 	if(!$(target).hasClass("selected")){
 	    color = COLOR_HEAP.min();
-	    COLOR_HEAP[color] = 10;
+            COLOR_HEAP[color] = 10;
 	    if(color == 10){
 		console.log("No more than ten selections available.")
 		return;
@@ -65,11 +90,17 @@ function coin_selections(){
 
 	    $("#container7").animate({opacity:0,right:"100px"}, 150, function() {
                 var ticker = $(target).attr("data-chart");
-                getCoin(ticker)
-                    .then(vals => {
-                        chart.series[color].setData(vals);
-                        $("#container7").animate({opacity:1,right:0}, 150);
-                    });
+                if (ticker.slice(0,5) == 'folio') {
+                    chart.series[color].setData(FOLIO_VALS);
+                    $("#container7").animate({opacity:1,right:0}, 150);
+                }
+                else {
+                    getCoin(ticker)
+                        .then(vals => {
+                            chart.series[color].setData(vals);
+                            $("#container7").animate({opacity:1,right:0}, 150);
+                        });
+                }
 	    });
 
 	    if($(target).hasClass("coin_add"))
@@ -92,6 +123,7 @@ function coin_selections(){
 }
 
 function portfolio_selections(){
+    //TODO: run analyzePortfolio() on selection
     $(".portfolio_time").click(function(event) {
 	if(event.target == highlighted){
 	    $(event.target).parent().css("border","0px");
@@ -164,28 +196,9 @@ function scroll_portfolios(){
     });
 }
 
-$(document).ready(function() {
-    initialize();
-
-    //Allow selections of coin opts
-    coin_selections();
-
-    //Add border to container on portfolio click
-    portfolio_selections();
-
-    //Highlight time selection
-    time_selections();
-			    
-    //Scroll through portfolios
-    scroll_portfolios();
-
-    //Listen to sliders
-    slider_updates();
-});
-
 function slider_updates(){
     $(".slider").on("input",function() {
-        $("#"+$(this).attr("data-ratio")).html(this.value);
+        $("#"+$(this).attr("data-ratio") + "Ratio").html(this.value);
     });
 }
 
@@ -207,35 +220,112 @@ function fadeContainers(){
     }
 }
 
-function calcPortfolios() {
+async function calcPortfolio() {
     $(".slider").each(function(i,obj) {
         if(obj.value == 0)
             return;
-        getCoin($(obj).attr("data-ratio").slice(0,3))
+        getCoin($(obj).attr("data-ratio"))
             .then(vals => {
+                if(FOLIO_VALS.length > 0 && FOLIO_VALS.length < vals.length){
+                    bonus = []
+                    for (var i = 0; i+FOLIO_VALS.length < vals.length; i++) {
+                        bonus[i] = [
+                            vals[i][0],
+                            vals[i][1]/vals[0][1]*.01*parseInt(obj.value)
+                        ];
+                    }
+                    FOLIO_VALS = bonus.concat(FOLIO_VALS)
+                }
                 for(let i = vals.length-1; i >= 0; i--){
                     if(FOLIO_VALS[i] == undefined)
                         FOLIO_VALS[i] = [
                             vals[i][0],
                             0
                         ];
-                    FOLIO_VALS[i][1] += vals[i][1]*.01*parseInt(obj.value);
+                    FOLIO_VALS[i][1] += vals[i][1]/vals[0][1]*.01*parseInt(obj.value);
                 }
             });
     });
+    return FOLIO_VALS;
 }
 
 /**
  * Returns useful information about the portfolio.
  * 
  * Info includes:
- * max, min, best avg, worst avg, best log avg, most consistent
- *
- * @params (TODO NAME) The [highlighted] portfolio.
- @ return  html for the portfolio's calculated info.
+ * max, min, best avg, worst avg, best log avg, most consistent...
  */
-function analyzePortfolios() {
-    
+function analyzePortfolio(folio) {
+    //MIN and MAX eventually need to be adjusted to display window only
+    var min = 2000000
+    var mintime = 0
+    var max = 0
+    var maxtime = 0
+    var avg = 0
+    var base = folio[0][1]
+    folio.forEach( val => {
+        var percent = val[1]/base
+        if(min > percent) {
+            min = percent
+            mintime = val[0]
+        }
+        if(max < percent) {
+            max = percent
+            maxtime = val[0]
+        }
+        avg += percent
+    });
+    avg /= folio.length
+
+    var stdevSum = 0
+    //Second loop to calc stdev
+    folio.forEach( val => {
+        var diff = val[1]/base-avg
+        stdevSum += diff*diff
+    });
+    var stdev = Math.sqrt(stdevSum / folio.length)
+    var retrn = parseInt(100*(folio[folio.length-1][1]/folio[0][1]))
+
+    //Update DOM with values
+    $("#folioStdev").html(+stdev.toFixed(2))
+
+    //Set colors based on gain/loss
+    if(retrn >= 100){
+        $("#return").html("+" + retrn + "%")
+        $("#return").css("color","#16c784")
+    }
+    else{
+        $("#return").html("−" + retrn + "%")
+        $("#return").css("color","#ea3943")
+    }
+    if(max > 1){
+        $("#folioHigh").html("+" + +(max*100).toFixed(2) + "%")
+        $("#folioHigh").css("color","#16c784")
+    }
+    else{
+        $("#folioHigh").html("−" + (100-(max*100)).toFixed(2) + "%")
+        $("#folioHigh").css("color","#ea3943")
+    }
+    if(min > 1){
+        $("#folioLow").html("+" + +(min*100).toFixed(2) + "%")
+        $("#folioLow").css("color","#16c784")
+    }
+    else{
+        $("#folioLow").html("−" + (100-(min*100)).toFixed(2) + "%")
+        $("#folioLow").css("color","#ea3943")
+    }
+    if(avg > 1){
+        $("#folioAvg").html("+" + +(avg*100).toFixed(2) + "%")
+        $("#folioAvg").css("color","#16c784")
+    }
+    else{
+        $("#folioAvg").html("−" + (100-(avg*100)).toFixed(2) + "%")
+        $("#folioAvg").css("color","#ea3943")
+    }
+    if(stdev < 3)
+        $("#folioStdev").css("color","#16c784")
+    else
+        $("#folioStdev").css("color","#ea3943")
 }
 
 function clickBump(target) {

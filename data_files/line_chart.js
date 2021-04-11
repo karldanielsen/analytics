@@ -116,6 +116,84 @@ var chart_data =
 		[1, Highcharts.color(Highcharts.getOptions().colors[3]).setOpacity(0).get('rgba')]
 	    ]
 	}
+    },{
+	fillColor: {
+	    linearGradient: {
+		x1: 0,
+		y1: 0,
+		x2: 0,
+		y2: 1
+	    },
+	    stops: [
+                [0, Highcharts.getOptions().colors[3]],
+		[1, Highcharts.color(Highcharts.getOptions().colors[3]).setOpacity(0).get('rgba')]
+	    ]
+	}
+    },{
+	fillColor: {
+	    linearGradient: {
+		x1: 0,
+		y1: 0,
+		x2: 0,
+		y2: 1
+	    },
+	    stops: [
+                [0, Highcharts.getOptions().colors[3]],
+		[1, Highcharts.color(Highcharts.getOptions().colors[3]).setOpacity(0).get('rgba')]
+	    ]
+	}
+    },{
+	fillColor: {
+	    linearGradient: {
+		x1: 0,
+		y1: 0,
+		x2: 0,
+		y2: 1
+	    },
+	    stops: [
+                [0, Highcharts.getOptions().colors[3]],
+		[1, Highcharts.color(Highcharts.getOptions().colors[3]).setOpacity(0).get('rgba')]
+	    ]
+	}
+    },{
+	fillColor: {
+	    linearGradient: {
+		x1: 0,
+		y1: 0,
+		x2: 0,
+		y2: 1
+	    },
+	    stops: [
+                [0, Highcharts.getOptions().colors[3]],
+		[1, Highcharts.color(Highcharts.getOptions().colors[3]).setOpacity(0).get('rgba')]
+	    ]
+	}
+    },{
+	fillColor: {
+	    linearGradient: {
+		x1: 0,
+		y1: 0,
+		x2: 0,
+		y2: 1
+	    },
+	    stops: [
+                [0, Highcharts.getOptions().colors[3]],
+		[1, Highcharts.color(Highcharts.getOptions().colors[3]).setOpacity(0).get('rgba')]
+	    ]
+	}
+    },{
+	fillColor: {
+	    linearGradient: {
+		x1: 0,
+		y1: 0,
+		x2: 0,
+		y2: 1
+	    },
+	    stops: [
+                [0, Highcharts.getOptions().colors[3]],
+		[1, Highcharts.color(Highcharts.getOptions().colors[3]).setOpacity(0).get('rgba')]
+	    ]
+	}
     }
             ]
 } 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ornus Analytics</title>
+    <title>Asset Analytics</title>
     <link rel="icon" href="data_files/ornus-logo.png">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="styles/styles.css">
@@ -37,15 +37,15 @@
 	    </div>
 	    <div id="scrolling_coin_opts" class="parent">
 	      <div id="opt1" class="parent coin_opts">
-	        <div id="container1" class="container" style="bottom: 0px; opacity: 1; border: 3px solid white;">
+	        <div id="container1" class="container">
 		  <div class="portfolio_time" style="padding-top:12px">FOLIO</div>
-		  <div class="add_to_chart">
+		  <div class="add_to_chart" data-chart="folio1">
 		    +
 		  </div>
 	        </div>
 	      </div>
 	      <div id="opt2" class="parent coin_opts">
-	        <div id="container2" class="container">
+	        <div id="container2" class="container" style="bottom: 0px; opacity: 1; border: 3px solid white;">
 		  <div class="portfolio_time">BTC</div>
 		  <div class="add_to_chart">
 		    +
@@ -62,7 +62,7 @@
 	      </div>
 	      <div id="opt4" class="parent coin_opts">
 	        <div id="container4" class="container">
-		  <div class="portfolio_time">XRP</div>
+		  <div class="portfolio_time">BNB</div>
 		  <div class="add_to_chart">
 		    +
 		  </div>
@@ -126,20 +126,30 @@
 		<td data-time="7" class="time_button">7d</td>
 	      </tr>
 	      <tr>
-		<th id="return" colspan="4" style="font-size:90px;color:#16c784">+281%</th>
+		<th id="return" colspan="4" style="font-size:72px">RET</th>
 	      </tr>
 	      <tr>
 		<th>High:</th>
-		<td>370.2%</td>
-		<th>Avg:</th>
-		<td>119.9%</td>
+		<td id="folioHigh">N/A</td>
+		<td id="folioHighTime"></td>
 	      </tr>
 	      <tr>
 		<th>Low:</th>
-		<td>-12.5%</td>
+		<td id="folioLow">N/A</td>
+		<td id="folioLowTime"></td>
+	      </tr>
+              <tr>
+		<th>Avg:</th>
+		<td id="folioAvg">N/A</td>
 		<th></th>
 		<td></td>
-	      </tr>
+              </tr>
+              <tr>
+		<th>Stdev:</th>
+		<td id="folioStdev">N/A</td>
+		<th></th>
+		<td></td>
+              </tr>
 	      <tr>
 		<td></td>
 		<th style="text-align:left">Funds:</th>
@@ -167,47 +177,91 @@
 	      </tr>
 	      <tr id="bitcoin_chart">
 		<td>Bitcoin</td>
-		<td>$33,092.03</td>
-                <td id="btcRatio" class="ratio">25%</td>
+		<td id="btcValue">$33,092.03</td>
+                <td id="btcRatio" class="ratio">25 </td>
                 <td colspan="3">
                   <div class="slidecontainer">
-                    <input type="range" min="0" max="100" value="50" class="slider" data-ratio="btcRatio">
+                    <input type="range" min="0" max="100" value="25" defaultValue="25" class="slider" data-ratio="btc">
                   </div>
                 </td>
 		<td class="coin_add add_to_chart selected" data-chart="BTC" data-color="#7cb5ec" style="background:rgb(124, 181, 236)">−</td>
 	      </tr>
 	      <tr id="etherium_chart">
 		<td>Etherium</td>
-		<td>$670.98</td>
-                <td class="ratio" id="ethRatio">25%</td>
+		<td id="ethValue">$670.98</td>
+                <td class="ratio" id="ethRatio">0 </td>
                 <td colspan="3">
                   <div class="slidecontainer">
-                    <input type="range" min="0" max="100" value="50" class="slider" data-ratio="ethRatio">
+                    <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="eth">
                   </div>
                 </td>
 		<td class="coin_add add_to_chart" data-chart="ETH">+</td>
 	      </tr>
-	      <tr id="xrp_chart">
-		<td>XRP</td>
+	      <tr id="fil_chart">
+		<td>Filecoin</td>
 		<td>$0.23</td>
-                <td id="xrpRatio" class="ratio">25%</td>
+                <td id="filRatio" class="ratio">0 </td>
                 <td colspan="3">
                   <div class="slidecontainer">
-                    <input type="range" min="0" max="100" value="50" class="slider" data-ratio="xrpRatio">
+                    <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="fil">
                   </div>
                 </td>
-		<td class="coin_add add_to_chart" data-chart="">+</td>
+		<td class="coin_add add_to_chart" data-chart="FIL">+</td>
 	      </tr>
 	      <tr id="litecoin_chart">
 		<td>Litecoin</td>
 		<td>$155.12</td>
-                <td id="ltcRatio" class="ratio">25</td>
+                <td id="ltcRatio" class="ratio">0 </td>
                 <td colspan="3">
                   <div class="slidecontainer">
-                    <input type="range" min="0" max="100" value="50" class="slider" data-ratio="ltcRatio">
+                    <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="ltc">
                   </div>
                 </td>
 		<td class="coin_add add_to_chart" data-chart="LTC">+</td>
+	      </tr>
+              <tr id="dot_chart">
+		<td>Polkadot</td>
+		<td>$0.23</td>
+                <td id="dotRatio" class="ratio">0 </td>
+                <td colspan="3">
+                  <div class="slidecontainer">
+                    <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="dot">
+                  </div>
+                </td>
+		<td class="coin_add add_to_chart" data-chart="DOT">+</td>
+	      </tr>
+              <tr id="uni_chart">
+		<td>Unicorn</td>
+		<td>$0.23</td>
+                <td id="uniRatio" class="ratio">0 </td>
+                <td colspan="3">
+                  <div class="slidecontainer">
+                    <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="uni">
+                  </div>
+                </td>
+		<td class="coin_add add_to_chart" data-chart="UNI">+</td>
+	      </tr>
+              <tr id="link_chart">
+		<td>Chain Link</td>
+		<td>$0.23</td>
+                <td id="linkRatio" class="ratio">0 </td>
+                <td colspan="3">
+                  <div class="slidecontainer">
+                    <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="link">
+                  </div>
+                </td>
+		<td class="coin_add add_to_chart" data-chart="LINK">+</td>
+	      </tr>
+              <tr id="bch_chart">
+		<td>Bitcoin Cash</td>
+		<td>$0.23</td>
+                <td id="bchRatio" class="ratio">0 </td>
+                <td colspan="3">
+                  <div class="slidecontainer">
+                    <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="bch">
+                  </div>
+                </td>
+		<td class="coin_add add_to_chart" data-chart="BCH">+</td>
 	      </tr>
 	    </table>
 	  </div>
