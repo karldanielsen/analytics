@@ -1,7 +1,5 @@
 //TODO: make buttons at top re-evalute folio
 //TODO: make analyzePortfolio account for window size
-//TODO: add button above proportion to generate a portfolio
-//TODO: make funds an adustable value (textarea)
 //TODO: make calcPortfolio reload the pie chart
 
 const NUM_CONTAINERS = 13;
@@ -45,6 +43,9 @@ $(document).ready(function() {
 
     //Listen to sliders
     slider_updates();
+
+    //Adjust returns in response to funds
+    calcReturn();
 });
 
 function initialize(){
@@ -326,6 +327,22 @@ function analyzePortfolio(folio) {
         $("#folioStdev").css("color","#16c784")
     else
         $("#folioStdev").css("color","#ea3943")
+    $("#cashReturn").html("$0.00");
+    $("#funds").val("0");
+}
+
+function calcReturn(){
+    $("#funds").on("input", function() {
+        let ret = parseInt($("#return").html().substring(1,$("#return").html().length-1));
+        let funds = parseFloat($(this).val().replace(/,/g, ""));
+        if(isNaN(funds))
+            $("#cashReturn").html("$0.00");
+        else if(ret > 100)
+            $("#cashReturn").html("$" + (funds*(ret/100)).toFixed(2));
+        else
+            $("#cashReturn").html("$" + (funds*((100-ret)/100)).toFixed(2));
+        $("#cashReturn").css("color",$("#return").css("color"));
+    })
 }
 
 function clickBump(target) {

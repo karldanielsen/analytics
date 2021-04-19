@@ -14,6 +14,8 @@
     --gradient-clr:linear-gradient(#192C42,#223b59);
     --bg-clr:#223b59;
     --hover-clr:#16c784 !important;
+    --gain-clr:#16c784;
+    --loss-clr:#ea3943;
 }
 
 
@@ -51,6 +53,12 @@ th {
 td {
     color:var(--subtle-txt-clr);
     font-size:14px;
+}
+
+textarea {
+    background: var(--bg-clr);
+    border-color: white;
+    color:white;
 }
 
 #display_case {
@@ -226,6 +234,21 @@ tspan {
     fill:#9ca5b0;
 }
 
+#generate {
+    -webkit-appearance: button;
+    transition:background .3s;
+    color:white;
+    background:var(--bg-clr);
+    padding:3px 0 3px 0;
+    width:120px;
+    text-align:center;
+}
+
+#generate:hover {
+    background:var(--hover-clr);
+    cursor:pointer;
+}
+
 .slidecontainer {
     padding:0px 5px;
 }
@@ -251,9 +274,8 @@ tspan {
 }
 
 .slider::-moz-range-thumb {
-    width: 25px; /* Set a specific slider handle width */
+    width: 15px; /* Set a specific slider handle width */
     height: 25px; /* Slider handle height */
-    background: #4CAF50; /* Green background */
     cursor: pointer; /* Cursor on hover */
 }
 
