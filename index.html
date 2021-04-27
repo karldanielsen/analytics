@@ -35,65 +35,58 @@
 	      </div>
 	    </div>
 	    <div id="scrolling_coin_opts" class="parent">
-	      <div id="opt1" class="parent coin_opts">
-	        <div id="container1" class="container">
-		  <div class="portfolio_time" style="padding-top:12px">FOLIO</div>
-		  <div class="add_to_chart" data-chart="folio1">
-		    +
-		  </div>
-	        </div>
-	      </div>
-	      <div id="opt2" class="parent coin_opts">
-	        <div id="container2" class="container" style="bottom: 0px; opacity: 1; border: 3px solid white;">
-		  <div class="portfolio_time">BTC</div>
-		  <div class="add_to_chart">
-		    +
-		  </div>
-	        </div>
-	      </div>
-	      <div id="opt3" class="parent coin_opts">
-	        <div id="container3" class="container">
-		  <div class="portfolio_time">ETH</div>
-		  <div class="add_to_chart">
-		    +
-		  </div>
-	        </div>
-	      </div>
-	      <div id="opt4" class="parent coin_opts">
-	        <div id="container4" class="container">
-		  <div class="portfolio_time">BNB</div>
-		  <div class="add_to_chart">
-		    +
-		  </div>
-	        </div>
-	      </div>	
-	      <div id="opt5" class="parent coin_opts">
-	        <div id="container5" class="container">
-		  <div class="portfolio_time">LTC</div>
-		  <div class="add_to_chart">
+	      <div id="opt7" class="parent coin_opts">
+	        <div id="container1" class="container" style="bottom: 0px; opacity: 1; border: 3px solid white;">
+		  <div class="portfolio_time" onclick="portfolio_selections(event)">BTC</div>
+		  <div class="add_to_chart" onclick="coin_selections(event)">
 		    +
 		  </div>
 	        </div>
 	      </div>
 	      <div id="opt6" class="parent coin_opts">
-	        <div id="container6" class="container">
-		  <div class="portfolio_time">ADA</div>
-		  <div class="add_to_chart">
+	        <div id="container2" class="container">
+		  <div class="portfolio_time" onclick="portfolio_selections(event)">ETH</div>
+		  <div class="add_to_chart" onclick="coin_selections(event)">
+		    +
+		  </div>
+	        </div>
+	      </div>
+	      <div id="opt5" class="parent coin_opts">
+	        <div id="container3" class="container">
+		  <div class="portfolio_time" onclick="portfolio_selections(event)"
+                       >BNB</div>
+		  <div class="add_to_chart" onclick="coin_selections(event)">
+		    +
+		  </div>
+                </div>
+              </div>
+	      <div id="opt4" class="parent coin_opts">
+	        <div id="container4" class="container">
+		  <div class="portfolio_time" onclick="portfolio_selections(event)">LTC</div>
+		  <div class="add_to_chart" onclick="coin_selections(event)">
+		    +
+		  </div>
+	        </div>
+	      </div>
+	      <div id="opt3" class="parent coin_opts">
+	        <div id="container5" class="container">
+		  <div class="portfolio_time" onclick="portfolio_selections(event)">ADA</div>
+		  <div class="add_to_chart" onclick="coin_selections(event)">
 		    +
 		  </div>
 	        </div>
 	      </div>
 	      <!-- Additional coin opts insertable here via JS -->
-	      <div id="opt7" class="parent coin_opts">
-	        <div class="container" style="opacity:1">
-		  <div class="add_to_chart">
+	      <div id="opt2" class="parent coin_opts">
+	        <div id="container6" class="container">
+		  <div class="add_to_chart" onclick="coin_selections(event)">
 		    +
 		  </div>
 	        </div>
 	      </div>
-	      <div id="opt8" class="parent coin_opts">
+	      <div id="opt1" class="parent coin_opts">
 	        <div class="container" style="opacity:1">
-		  <div class="add_to_chart">
+		  <div class="add_to_chart" onclick="coin_selections(event)">
 		    +
 		  </div>
 	        </div>
@@ -105,7 +98,7 @@
 	      </div>
 	    </div>
           </div>
-	  <div id="line_chart" class="parent"> 
+	  <div id="line_chart" onclick="coin_selections(event)" class="parent">
 	    <div id="container7" class="container">
 	      <div id="line_figure"></div>
 	    </div>
@@ -185,7 +178,7 @@
                     <input type="range" min="0" max="100" value="25" defaultValue="25" class="slider" data-ratio="btc">
                   </div>
                 </td>
-		<td class="coin_add add_to_chart selected" data-chart="BTC" data-color="#7cb5ec" style="background:rgb(124, 181, 236)">−</td>
+		<td class="coin_add add_to_chart selected" data-chart="BTC" onclick="coin_selections(event)" data-color="#7cb5ec" style="background:rgb(124, 181, 236)">−</td>
 	      </tr>
 	      <tr id="etherium_chart">
 		<td>Etherium</td>
@@ -196,7 +189,7 @@
                     <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="eth">
                   </div>
                 </td>
-		<td class="coin_add add_to_chart" data-chart="ETH">+</td>
+		<td class="coin_add add_to_chart" data-chart="ETH" onclick="coin_selections(event)">+</td>
 	      </tr>
 	      <tr id="fil_chart">
 		<td>Filecoin</td>
@@ -207,7 +200,7 @@
                     <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="fil">
                   </div>
                 </td>
-		<td class="coin_add add_to_chart" data-chart="FIL">+</td>
+		<td class="coin_add add_to_chart" data-chart="FIL" onclick="coin_selections(event)">+</td>
 	      </tr>
 	      <tr id="litecoin_chart">
 		<td>Litecoin</td>
@@ -218,7 +211,7 @@
                     <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="ltc">
                   </div>
                 </td>
-		<td class="coin_add add_to_chart" data-chart="LTC">+</td>
+		<td class="coin_add add_to_chart" data-chart="LTC" onclick="coin_selections(event)">+</td>
 	      </tr>
               <tr id="dot_chart">
 		<td>Polkadot</td>
@@ -229,7 +222,7 @@
                     <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="dot">
                   </div>
                 </td>
-		<td class="coin_add add_to_chart" data-chart="DOT">+</td>
+		<td class="coin_add add_to_chart" data-chart="DOT" onclick="coin_selections(event)">+</td>
 	      </tr>
               <tr id="uni_chart">
 		<td>Unicorn</td>
@@ -240,7 +233,7 @@
                     <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="uni">
                   </div>
                 </td>
-		<td class="coin_add add_to_chart" data-chart="UNI">+</td>
+		<td class="coin_add add_to_chart" data-chart="UNI" onclick="coin_selections(event)">+</td>
 	      </tr>
               <tr id="link_chart">
 		<td>Chain Link</td>
@@ -251,7 +244,7 @@
                     <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="link">
                   </div>
                 </td>
-		<td class="coin_add add_to_chart" data-chart="LINK">+</td>
+		<td class="coin_add add_to_chart" data-chart="LINK" onclick="coin_selections(event)">+</td>
 	      </tr>
               <tr id="bch_chart">
 		<td>Bitcoin Cash</td>
@@ -262,7 +255,7 @@
                     <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="bch">
                   </div>
                 </td>
-		<td class="coin_add add_to_chart" data-chart="BCH">+</td>
+		<td class="coin_add add_to_chart" data-chart="BCH" onclick="coin_selections(event)">+</td>
 	      </tr>
 	    </table>
 	  </div>

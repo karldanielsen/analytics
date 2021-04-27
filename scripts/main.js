@@ -1,17 +1,19 @@
 //TODO: make buttons at top re-evalute folio
-//TODO: make analyzePortfolio account for window size
 //TODO: make calcPortfolio reload the pie chart
+//TODO: add times to performance
+//TODO: Fix initially highlighted folio
 
 const NUM_CONTAINERS = 13;
+const NUM_COINS = 7;
 var num = 0;
 
-const MAX_OPTS = 7;
+var MAX_OPTS = 8;
 var OPT_SCROLL = 0;
 
 const COLORS = Highcharts.getOptions().colors.slice(0,10);
 var COLOR_HEAP = [10,1,2,3,4,5,6,7,8,9];
 
-var FOLIO_VALS = [];
+var FOLIOS = [];
 
 var chart;
 var highlighted;
@@ -28,12 +30,6 @@ Array.prototype.max = function() {
 $(document).ready(function() {
     //Get starter data and run startup animations
     initialize();
-    
-    //Allow selections of coin opts
-    coin_selections();
-
-    //Add border to container on portfolio click
-    portfolio_selections();
 
     //Highlight time selection
     time_selections();
@@ -74,71 +70,76 @@ function initialize(){
     fadeContainers();
 }
 
-function coin_selections(){
-    $(".add_to_chart, .coin_add").click(function(event) {
-	var target = event.target;
-	var color;
-	if(!$(target).hasClass("selected")){
-	    color = COLOR_HEAP.min();
-            COLOR_HEAP[color] = 10;
-	    if(color == 10){
-		console.log("No more than ten selections available.")
-		return;
-	    }
-	    $(target).addClass("selected");
-	    $(target).attr("data-color",COLORS[color]);
-	    $(target).css("background",COLORS[color]);
-
-	    $("#container7").animate({opacity:0,right:"100px"}, 150, function() {
-                var ticker = $(target).attr("data-chart");
-                if (ticker.slice(0,5) == 'folio') {
-                    chart.series[color].setData(FOLIO_VALS);
-                    $("#container7").animate({opacity:1,right:0}, 150);
-                }
-                else {
-                    getCoin(ticker)
-                        .then(vals => {
-                            chart.series[color].setData(vals);
-                            $("#container7").animate({opacity:1,right:0}, 150);
-                        });
-                }
-	    });
-
-	    if($(target).hasClass("coin_add"))
-		$(target).html("−");
+function coin_selections(event){
+    var target = event.target;
+    var color;
+    if(!$(target).hasClass("selected")){
+	color = COLOR_HEAP.min();
+        COLOR_HEAP[color] = 10;
+	if(color == 10){
+	    console.log("No more than ten selections available.")
+	    return;
 	}
-	else{
-	    var index = COLORS.indexOf($(target).attr("data-color"));
-	    $(target).attr("data-color",0);
-	    COLOR_HEAP[index] = index;
-	    $(target).removeClass("selected");
-	    if($(target).hasClass("coin_add"))
-		$(target).html("+");
-	    $(target).css("background","");
-	    $("#container7").animate({opacity:0,right:100}, 150,function() {
-		chart.series[index].setData([]);
-	    });
-	    $("#container7").animate({opacity:1,right:0}, 150);
-	}
-    });
+	$(target).addClass("selected");
+	$(target).attr("data-color",COLORS[color]);
+	$(target).css("background",COLORS[color]);
+
+	$("#container7").animate({opacity:0,right:"100px"}, 150, function() {
+            console.log("run1")
+            var ticker = $(target).attr("data-chart");
+            if (ticker.slice(0,5) == 'folio') {
+                console.log(parseInt(ticker.slice(5,ticker.length)))
+                chart.series[color].setData(FOLIOS[parseInt(ticker.slice(5,ticker.length))-1]);
+                $("#container7").animate({opacity:1,right:0}, 150);
+            }
+            else {
+                getCoin(ticker)
+                    .then(vals => {
+                        chart.series[color].setData(vals);
+                        $("#container7").animate({opacity:1,right:0}, 150);
+                    });
+            }
+	});
+
+	if($(target).hasClass("coin_add"))
+	    $(target).html("−");
+    }
+    else{
+	var index = COLORS.indexOf($(target).attr("data-color"));
+	$(target).attr("data-color",0);
+	COLOR_HEAP[index] = index;
+	$(target).removeClass("selected");
+	if($(target).hasClass("coin_add"))
+	    $(target).html("+");
+	$(target).css("background","");
+	$("#container7").animate({opacity:0,right:100}, 150,function() {
+	    chart.series[index].setData([]);
+	});
+	$("#container7").animate({opacity:1,right:0}, 150);
+    }
 }
 
-function portfolio_selections(){
-    //TODO: run analyzePortfolio() on selection
-    $(".portfolio_time").click(function(event) {
-	if(event.target == highlighted){
-	    $(event.target).parent().css("border","0px");
-	    $(event.target).css("padding-top","12px");
-	    highlighted = 0;
-	}
-	else{
-	    $(event.target).parent().css("border","3px solid white");
-	    $(event.target).css("padding-top","9px");
-	    $(highlighted).parent().css("border","0px");
-	    $(highlighted).css("padding-top","12px");
-	    highlighted = event.target;
-	}
-    });
+function portfolio_selections(event){
+    if(event.target == highlighted){
+	$(event.target).parent().css("border","0px");
+	$(event.target).css("padding-top","12px");
+	highlighted = 0;
+    }
+    else{
+	$(event.target).parent().css("border","3px solid white");
+	$(event.target).css("padding-top","9px");
+	$(highlighted).parent().css("border","0px");
+	$(highlighted).css("padding-top","12px");
+	highlighted = event.target;
+        if($(event.target).html().slice(0,5) == "FOLIO")
+            analyzePortfolio(FOLIOS[parseInt($(event.target).html().slice(6))-1])
+        else{
+            getCoin($(event.target).html())
+                .then(vals => {
+                    analyzePortfolio(vals)
+                });
+        }
+    }
 }
 
 function time_selections(){
@@ -182,7 +183,7 @@ function time_selections(){
 function scroll_portfolios(){
     $("#right_scroll").click(function() {
 	if(OPT_SCROLL != 0){
-	    $(`#opt${OPT_SCROLL}`).css("display","inline-block");
+	    $(`#opt${MAX_OPTS-OPT_SCROLL}`).css("display","inline-block");
 	    OPT_SCROLL--;
 	    
 	}
@@ -191,7 +192,7 @@ function scroll_portfolios(){
     $("#left_scroll").click(function() {
 	if(OPT_SCROLL+6 <= MAX_OPTS){
 	    OPT_SCROLL++;
-	    $(`#opt${OPT_SCROLL}`).css("display","none");
+	    $(`#opt${MAX_OPTS-OPT_SCROLL}`).css("display","none");
 
 	}
     });
@@ -222,32 +223,58 @@ function fadeContainers(){
 }
 
 async function calcPortfolio() {
+    var new_folio = []
     $(".slider").each(function(i,obj) {
         if(obj.value == 0)
             return;
         getCoin($(obj).attr("data-ratio"))
             .then(vals => {
-                if(FOLIO_VALS.length > 0 && FOLIO_VALS.length < vals.length){
+                if(new_folio.length > 0 && new_folio.length < vals.length){
                     bonus = []
-                    for (var i = 0; i+FOLIO_VALS.length < vals.length; i++) {
+                    for (var i = 0; i+new_folio.length < vals.length; i++) {
                         bonus[i] = [
                             vals[i][0],
                             vals[i][1]/vals[0][1]*.01*parseInt(obj.value)
                         ];
                     }
-                    FOLIO_VALS = bonus.concat(FOLIO_VALS)
+                    new_folio = bonus.concat(new_folio)
                 }
                 for(let i = vals.length-1; i >= 0; i--){
-                    if(FOLIO_VALS[i] == undefined)
-                        FOLIO_VALS[i] = [
+                    if(new_folio[i] == undefined)
+                        new_folio[i] = [
                             vals[i][0],
                             0
                         ];
-                    FOLIO_VALS[i][1] += vals[i][1]/vals[0][1]*.01*parseInt(obj.value);
+                    new_folio[i][1] += vals[i][1]/vals[0][1]*.01*parseInt(obj.value);
                 }
             });
     });
-    return FOLIO_VALS;
+    FOLIOS.push(new_folio);
+    addOpt(FOLIOS.length-1);
+}
+
+function addOpt(folio_index) {
+    var html = `<div id=\"opt${folio_index+1+NUM_COINS}\" class=\"parent coin_opts\">\
+                  <div id=\"folio_container${folio_index+1}\" class=\"container\" style="opacity:1">\
+	            <div class=\"portfolio_time\" style=\"padding-top:12px\" onclick=\"portfolio_selections(event)\">FOLIO ${folio_index+1}</div>\
+                    <div class=\"add_to_chart\" data-chart=\"folio${folio_index+1}\"  onclick=\"coin_selections(event)\">\
+		      +\
+		    </div>\
+	          </div>\
+                </div>`;
+    if (OPT_SCROLL != 0) {
+        html = `<div id=\"opt${folio_index+1+NUM_COINS}\" class=\"parent coin_opts\" style=\"display:none\">\
+                  <div id=\"folio_container${folio_index+1}\" class=\"container\" style="opacity:1">\
+	            <div class=\"portfolio_time\" style=\"padding-top:12px\" onclick=\"portfolio_selections(event)\">FOLIO ${folio_index+1}</div>\
+                      <div class=\"add_to_chart\" data-chart=\"folio${folio_index+1}\" onclick=\"coin_selections(event)\">\
+		      +\
+		    </div>\
+	          </div>\
+                </div>`;
+        OPT_SCROLL += 1
+    }
+    $("#scrolling_coin_opts").prepend(html);
+    MAX_OPTS += 1;
 }
 
 /**
@@ -263,8 +290,17 @@ function analyzePortfolio(folio) {
     var max = 0
     var maxtime = 0
     var avg = 0
-    var base = folio[0][1]
+    var base = -1
+    var window = [chart.xAxis[0].min,chart.xAxis[0].max]
+    var count  = 0
     folio.forEach( val => {
+        if(val[0] < window[0] || val[0] > window[1]) {
+            return
+        }
+        if(base == -1) {
+            base = val[1]
+        }
+        count++
         var percent = val[1]/base
         if(min > percent) {
             min = percent
@@ -276,31 +312,34 @@ function analyzePortfolio(folio) {
         }
         avg += percent
     });
-    avg /= folio.length
+    avg /= count
 
     var stdevSum = 0
     //Second loop to calc stdev
     folio.forEach( val => {
+        if(val[0] < window[0] || val[0] > window[1]) {
+            return
+        }
         var diff = val[1]/base-avg
         stdevSum += diff*diff
     });
-    var stdev = Math.sqrt(stdevSum / folio.length)
-    var retrn = parseInt(100*(folio[folio.length-1][1]/folio[0][1]))
+    var stdev = Math.sqrt(stdevSum / count)
+    var retrn = parseInt(100*(folio[folio.length-1][1]/folio[folio.length-count][1]))
 
     //Update DOM with values
     $("#folioStdev").html(+stdev.toFixed(2))
 
     //Set colors based on gain/loss
     if(retrn >= 100){
-        $("#return").html("+" + retrn + "%")
+        $("#return").html("+" + (retrn-100) + "%")
         $("#return").css("color","#16c784")
     }
     else{
-        $("#return").html("−" + retrn + "%")
+        $("#return").html("−" + (100-retrn) + "%")
         $("#return").css("color","#ea3943")
     }
     if(max > 1){
-        $("#folioHigh").html("+" + +(max*100).toFixed(2) + "%")
+        $("#folioHigh").html("+" + +((max*100)-100).toFixed(2) + "%")
         $("#folioHigh").css("color","#16c784")
     }
     else{
@@ -308,7 +347,7 @@ function analyzePortfolio(folio) {
         $("#folioHigh").css("color","#ea3943")
     }
     if(min > 1){
-        $("#folioLow").html("+" + +(min*100).toFixed(2) + "%")
+        $("#folioLow").html("+" + +((min*100)-100).toFixed(2) + "%")
         $("#folioLow").css("color","#16c784")
     }
     else{
@@ -316,7 +355,7 @@ function analyzePortfolio(folio) {
         $("#folioLow").css("color","#ea3943")
     }
     if(avg > 1){
-        $("#folioAvg").html("+" + +(avg*100).toFixed(2) + "%")
+        $("#folioAvg").html("+" + +((avg*100)-100).toFixed(2) + "%")
         $("#folioAvg").css("color","#16c784")
     }
     else{
