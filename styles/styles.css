@@ -283,3 +283,12 @@ tspan {
     text-align:right;
     width:45px;
 }
+
+.navbar {
+    background-color: var(--bg-clr);
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    position: relative;
+    display: flex;
+    align-items: center;
+}

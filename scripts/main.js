@@ -1,7 +1,6 @@
-//TODO: make buttons at top re-evalute folio
 //TODO: make calcPortfolio reload the pie chart
 //TODO: add times to performance
-//TODO: Fix initially highlighted folio
+//TODO: total_weights must be shifted when bonus exists
 
 const NUM_CONTAINERS = 13;
 const NUM_COINS = 7;
@@ -14,6 +13,7 @@ const COLORS = Highcharts.getOptions().colors.slice(0,10);
 var COLOR_HEAP = [10,1,2,3,4,5,6,7,8,9];
 
 var FOLIOS = [];
+var SELECTED_FOLIO = [];
 
 var chart;
 var highlighted;
@@ -49,7 +49,8 @@ function initialize(){
     getCoin("BTC")
         .then(vals => {
             chart.series[0].setData(vals);
-            analyzePortfolio(vals); 
+            analyzePortfolio(vals);
+            SELECTED_FOLIO = vals
         })
     
     //Load line chart
@@ -85,10 +86,8 @@ function coin_selections(event){
 	$(target).css("background",COLORS[color]);
 
 	$("#container7").animate({opacity:0,right:"100px"}, 150, function() {
-            console.log("run1")
             var ticker = $(target).attr("data-chart");
             if (ticker.slice(0,5) == 'folio') {
-                console.log(parseInt(ticker.slice(5,ticker.length)))
                 chart.series[color].setData(FOLIOS[parseInt(ticker.slice(5,ticker.length))-1]);
                 $("#container7").animate({opacity:1,right:0}, 150);
             }
@@ -131,12 +130,15 @@ function portfolio_selections(event){
 	$(highlighted).parent().css("border","0px");
 	$(highlighted).css("padding-top","12px");
 	highlighted = event.target;
-        if($(event.target).html().slice(0,5) == "FOLIO")
+        if($(event.target).html().slice(0,5) == "FOLIO"){
             analyzePortfolio(FOLIOS[parseInt($(event.target).html().slice(6))-1])
+            SELECTED_FOLIO = FOLIOS[parseInt($(event.target).html().slice(6))-1]
+        }
         else{
             getCoin($(event.target).html())
                 .then(vals => {
                     analyzePortfolio(vals)
+                    SELECTED_FOLIO = vals
                 });
         }
     }
@@ -168,7 +170,13 @@ function time_selections(){
 		    chart.xAxis[0].dataMax+time_slot*.01
 		)
 	    });
-	    $("#container7").animate({opacity:1,right:0}, 150);
+            $("#container7").animate({opacity:1,right:0}, 150,function() {
+                $(".portfolio_time").each(function(){
+                    if (SELECTED_FOLIO != []) {
+                        analyzePortfolio(SELECTED_FOLIO)
+                    }
+                });
+            });
 
 	    clickBump(event.target);
 
@@ -224,6 +232,7 @@ function fadeContainers(){
 
 async function calcPortfolio() {
     var new_folio = []
+    var total_weights = []
     $(".slider").each(function(i,obj) {
         if(obj.value == 0)
             return;
@@ -231,21 +240,33 @@ async function calcPortfolio() {
             .then(vals => {
                 if(new_folio.length > 0 && new_folio.length < vals.length){
                     bonus = []
-                    for (var i = 0; i+new_folio.length < vals.length; i++) {
+                    bonus_weights = []
+                    for (let i = 0; i+new_folio.length < vals.length; i++) {
                         bonus[i] = [
                             vals[i][0],
                             vals[i][1]/vals[0][1]*.01*parseInt(obj.value)
                         ];
+                        bonus_weights[i] = 1
                     }
                     new_folio = bonus.concat(new_folio)
+                    total_weights = bonus_weights.concat(total_weights)
                 }
-                for(let i = vals.length-1; i >= 0; i--){
-                    if(new_folio[i] == undefined)
-                        new_folio[i] = [
+                for(let i = vals.length-1; i >= 0; i--) {
+                    var dist = i
+                    if (new_folio.length >= vals.length) {
+                        dist = new_folio.length - (vals.length-i);
+                    }
+                    if(new_folio[dist] == undefined)
+                        new_folio[dist] = [
                             vals[i][0],
                             0
                         ];
-                    new_folio[i][1] += vals[i][1]/vals[0][1]*.01*parseInt(obj.value);
+                    if(typeof total_weights[dist] == "undefined")
+                        total_weights[dist] = 1
+                    let new_weight = total_weights[dist]+(parseInt(obj.value))
+                    new_folio[dist][1] = new_folio[dist][1]*(total_weights[dist]/new_weight) +
+                        vals[i][1]/vals[0][1]*.01*((parseInt(obj.value))/new_weight);
+                    total_weights[dist] = new_weight
                 }
             });
     });
