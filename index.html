@@ -35,7 +35,7 @@
 	      </div>
 	    </div>
 	    <div id="scrolling_coin_opts" class="parent">
-	      <div id="opt7" class="parent coin_opts">
+	      <div id="opt8" class="parent coin_opts">
 	        <div id="container1" class="container" style="bottom: 0px; opacity: 1; border: 3px solid white;">
 		  <div class="portfolio_time" onclick="portfolio_selections(event)">BTC</div>
 		  <div class="add_to_chart" onclick="coin_selections(event)">
@@ -43,7 +43,7 @@
 		  </div>
 	        </div>
 	      </div>
-	      <div id="opt6" class="parent coin_opts">
+	      <div id="opt7" class="parent coin_opts">
 	        <div id="container2" class="container">
 		  <div class="portfolio_time" onclick="portfolio_selections(event)">ETH</div>
 		  <div class="add_to_chart" onclick="coin_selections(event)">
@@ -51,16 +51,15 @@
 		  </div>
 	        </div>
 	      </div>
-	      <div id="opt5" class="parent coin_opts">
+	      <div id="opt6" class="parent coin_opts">
 	        <div id="container3" class="container">
-		  <div class="portfolio_time" onclick="portfolio_selections(event)"
-                       >BNB</div>
+		  <div class="portfolio_time" onclick="portfolio_selections(event)">FIL</div>
 		  <div class="add_to_chart" onclick="coin_selections(event)">
 		    +
 		  </div>
                 </div>
               </div>
-	      <div id="opt4" class="parent coin_opts">
+	      <div id="opt5" class="parent coin_opts">
 	        <div id="container4" class="container">
 		  <div class="portfolio_time" onclick="portfolio_selections(event)">LTC</div>
 		  <div class="add_to_chart" onclick="coin_selections(event)">
@@ -68,24 +67,34 @@
 		  </div>
 	        </div>
 	      </div>
-	      <div id="opt3" class="parent coin_opts">
+	      <div id="opt4" class="parent coin_opts">
 	        <div id="container5" class="container">
-		  <div class="portfolio_time" onclick="portfolio_selections(event)">ADA</div>
+		  <div class="portfolio_time" onclick="portfolio_selections(event)">DOT</div>
 		  <div class="add_to_chart" onclick="coin_selections(event)">
 		    +
 		  </div>
 	        </div>
 	      </div>
 	      <!-- Additional coin opts insertable here via JS -->
-	      <div id="opt2" class="parent coin_opts">
+	      <div id="opt3" class="parent coin_opts">
 	        <div id="container6" class="container">
+                  <div class="portfolio_time" onclick="portfolio_selections(event)">UNI</div>
 		  <div class="add_to_chart" onclick="coin_selections(event)">
 		    +
 		  </div>
 	        </div>
 	      </div>
-	      <div id="opt1" class="parent coin_opts">
+	      <div id="opt2" class="parent coin_opts">
 	        <div class="container" style="opacity:1">
+                  <div class="portfolio_time" onclick="portfolio_selections(event)">BCH</div>
+		  <div class="add_to_chart" onclick="coin_selections(event)">
+		    +
+		  </div>
+	        </div>
+	      </div>
+              <div id="opt1" class="parent coin_opts">
+	        <div class="container" style="opacity:1">
+                  <div class="portfolio_time" onclick="portfolio_selections(event)">DOGE</div>
 		  <div class="add_to_chart" onclick="coin_selections(event)">
 		    +
 		  </div>
@@ -123,23 +132,22 @@
 	      <tr>
 		<th>High:</th>
 		<td id="folioHigh">N/A</td>
-		<td id="folioHighTime"></td>
+		<td colspan="2" id="folioHighTime"></td>
 	      </tr>
 	      <tr>
 		<th>Low:</th>
 		<td id="folioLow">N/A</td>
-		<td id="folioLowTime"></td>
+		<td colspan="2" id="folioLowTime"></td>
 	      </tr>
               <tr>
 		<th>Avg:</th>
 		<td id="folioAvg">N/A</td>
-                <td id="folioAvgTime"></td>
+                <td colspan="2" id="folioAvgTime"></td>
               </tr>
               <tr>
 		<th>Stdev:</th>
 		<td id="folioStdev">N/A</td>
-		<th></th>
-		<td></td>
+		<td colspan="2"></td>
               </tr>
               </table>
               <table style="padding-left:40px">
@@ -246,12 +254,22 @@
                 </td>
 		<td class="coin_add add_to_chart" data-chart="BCH" onclick="coin_selections(event)">+</td>
 	      </tr>
+              <tr id="doge_chart">
+		<td>Dogecoin</td>
+		<td>$0.23</td>
+                <td id="dogeRatio" class="ratio">0 </td>
+                <td colspan="3">
+                  <div class="slidecontainer">
+                    <input type="range" min="0" max="100" value="0" defaultValue="0" class="slider" data-ratio="doge">
+                  </div>
+                </td>
+		<td class="coin_add add_to_chart" data-chart="DOGE" onclick="coin_selections(event)">+</td>
+	      </tr>
 	    </table>
 	  </div>
 	</div>
         <div id="pie_chart" class="parent">
 	  <div id="container10" class="container">
-	    <img style="position:absolute;width:100px;height:100px;z-index:1;top:150px;left:95px;" src="data_files/ornus-logo.png">
 	    <div id="pie_figure"></div>
 	  </div>
 	</div>

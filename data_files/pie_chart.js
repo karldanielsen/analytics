@@ -37,12 +37,9 @@ var pie_data =
 	pie: {
 	    allowPointSelect: true,
 	    cursor: 'pointer',
-//	    colors: pieColors,
-//	    borderColor: '#192C42',
-	    dataLabels: {
-		enabled: false
-	    },
-//	    showInLegend: true
+            dataLabels: {
+                enabled: false
+            }
 	}
     },
     exporting: {
@@ -55,28 +52,11 @@ var pie_data =
 	}
     },
     series: [{
-	name: '% Holdings',
+	name: 'Holdings',
 	colorByPoint: true,
 	data: [{
 	    name: 'Bitcoin',
-	    y: 61.41,
-	    sliced: true,
-	    selected: true
-	}, {
-	    name: 'Etherium',
-	    y: 11.84
-	}, {
-	    name: 'LiteCoin',
-	    y: 10.85
-	}, {
-	    name: 'DogeCoin',
-	    y: 4.67
-	}, {
-	    name: 'Bitconnect',
-	    y: 4.18
-	}, {
-	    name: 'Other',
-	    y: 7.05
+	    y: 100
 	}]
     }]
 }

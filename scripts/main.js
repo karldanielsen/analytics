@@ -1,12 +1,10 @@
-//TODO: make calcPortfolio reload the pie chart
-//TODO: add times to performance
-//TODO: total_weights must be shifted when bonus exists
+//TODO: Fix prices
 
 const NUM_CONTAINERS = 13;
-const NUM_COINS = 7;
+const NUM_COINS = 8;
 var num = 0;
 
-var MAX_OPTS = 8;
+var MAX_OPTS = 9;
 var OPT_SCROLL = 0;
 
 const COLORS = Highcharts.getOptions().colors.slice(0,10);
@@ -14,8 +12,10 @@ var COLOR_HEAP = [10,1,2,3,4,5,6,7,8,9];
 
 var FOLIOS = [];
 var SELECTED_FOLIO = [];
+var FOLIO_PROPS = [{name: 'BTC',y: 100}]
 
 var chart;
+var pie;
 var highlighted;
 var time_frame;
 
@@ -57,7 +57,7 @@ function initialize(){
     chart = Highcharts.chart('line_figure',chart_data);
 
     //Load pie chart
-    $("#pie_figure").highcharts(pie_data);
+    pie = Highcharts.chart('pie_figure',pie_data);
 
     //Initialize portfolio 1 as selected
     highlighted = $("#container1 > .portfolio_time");
@@ -133,10 +133,12 @@ function portfolio_selections(event){
         if($(event.target).html().slice(0,5) == "FOLIO"){
             analyzePortfolio(FOLIOS[parseInt($(event.target).html().slice(6))-1])
             SELECTED_FOLIO = FOLIOS[parseInt($(event.target).html().slice(6))-1]
+            pie.series[0].setData(FOLIO_PROPS[parseInt($(event.target).html().slice(6))])
         }
         else{
             getCoin($(event.target).html())
                 .then(vals => {
+                    pie.series[0].setData([{name:$(event.target).html(),y:100}])
                     analyzePortfolio(vals)
                     SELECTED_FOLIO = vals
                 });
@@ -232,12 +234,14 @@ function fadeContainers(){
 
 async function calcPortfolio() {
     var new_folio = []
+    var folio_props = []
     var total_weights = []
     $(".slider").each(function(i,obj) {
         if(obj.value == 0)
             return;
         getCoin($(obj).attr("data-ratio"))
             .then(vals => {
+                folio_props.push({name:$(obj).attr("data-ratio").toUpperCase(),y:parseInt(obj.value)})
                 if(new_folio.length > 0 && new_folio.length < vals.length){
                     bonus = []
                     bonus_weights = []
@@ -270,6 +274,7 @@ async function calcPortfolio() {
                 }
             });
     });
+    FOLIO_PROPS.push(folio_props);
     FOLIOS.push(new_folio);
     addOpt(FOLIOS.length-1);
 }
@@ -362,18 +367,22 @@ function analyzePortfolio(folio) {
     if(max > 1){
         $("#folioHigh").html("+" + +((max*100)-100).toFixed(2) + "%")
         $("#folioHigh").css("color","#16c784")
+        $("#folioHighTime").css("color","#16c784")
     }
     else{
         $("#folioHigh").html("−" + (100-(max*100)).toFixed(2) + "%")
         $("#folioHigh").css("color","#ea3943")
+        $("#folioHighTime").css("color","#ea3943")
     }
     if(min > 1){
         $("#folioLow").html("+" + +((min*100)-100).toFixed(2) + "%")
         $("#folioLow").css("color","#16c784")
+        $("#folioLowTime").css("color","#16c784")
     }
     else{
         $("#folioLow").html("−" + (100-(min*100)).toFixed(2) + "%")
         $("#folioLow").css("color","#ea3943")
+        $("#folioLowTime").css("color","#ea3943")
     }
     if(avg > 1){
         $("#folioAvg").html("+" + +((avg*100)-100).toFixed(2) + "%")
@@ -389,6 +398,12 @@ function analyzePortfolio(folio) {
         $("#folioStdev").css("color","#ea3943")
     $("#cashReturn").html("$0.00");
     $("#funds").val("0");
+
+    // Add times to everything
+    maxdate = new Date(maxtime)
+    $("#folioHighTime").html(`${maxdate.getMonth()}/${maxdate.getDate()}/${maxdate.getFullYear()}`)
+    mindate = new Date(mintime)
+    $("#folioLowTime").html(`${mindate.getMonth()}/${mindate.getDate()}/${mindate.getFullYear()}`)
 }
 
 function calcReturn(){
